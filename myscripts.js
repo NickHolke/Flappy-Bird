@@ -64,6 +64,7 @@ let bird = new Bird();
 let pipes = [];
 let pipeCounter = 100;
 let myReq;
+let score = 0;
 
 function addPipe() {
     pipeCounter--;
@@ -77,7 +78,9 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     bird.show();
     bird.update();
+    
     addPipe();
+    
 
     for (let i = pipes.length - 1; i >= 0; i--) {
         pipes[i].show();
@@ -86,10 +89,17 @@ function draw() {
         if (pipes[i].hits(bird)){
             gameOver();
         } 
+        
+        if (bird.x == pipes[i].x + pipes[i].width) {
+            score++;
+        }
+
         if (pipes[i].x < 0) {
             pipes.splice(i, 1);
         }
     }
+
+    drawScore();
 
     if (bird.y > canvas.height || bird.y < 0) {
         gameOver();
@@ -98,6 +108,14 @@ function draw() {
 }
 
 myReq = window.requestAnimationFrame(draw);
+
+function drawScore () {
+    ctx.beginPath();
+    ctx.font = "40px Arial";
+    ctx.fillStyle = "#AFE5E7";
+    ctx.fillText(''+ score, canvas.width / 2, 50)
+    ctx.closePath();
+}
 
 function gameOver() {
     window.cancelAnimationFrame(myReq);
